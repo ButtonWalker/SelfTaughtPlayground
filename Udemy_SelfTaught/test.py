@@ -1,14 +1,40 @@
 import requests
+from bs4 import BeautifulSoup
+import re
+import pprint
 
-url = "https://covid-19-data.p.rapidapi.com/report/country/name"
+url = input("Enter a website to extract the URL's from: ")
+# Make a request
+page = requests.get(url)
 
-querystring = {"date":"2020-11-19","name":"USA"}
+soup = BeautifulSoup(page.content, 'html.parser')
 
-headers = {
-    'x-rapidapi-key': "0befc5f52dmsh9218de6ab72579ap14dd44jsncad545bb53ee",
-    'x-rapidapi-host': "covid-19-data.p.rapidapi.com"
-    }
+# Extract title of page
+page_title = soup.title.text
 
-response = requests.request("GET", url, headers=headers, params=querystring)
+# Extract body of page
+page_body = soup.body
 
-print(response.text)
+# Extract head of page
+page_head = soup.head
+
+image_data = []
+
+images =  soup.select('img')
+for images in images:
+    scr = images.get('src')
+    alt = images.get('alt')
+    image_data.append({'src': scr, 'alt': alt})
+
+hlinks = []
+# Extracting all the <a> tags into a list.
+tags = soup.find_all('a')
+
+# Extracting URLs from the attribute href in the <a> tags.
+for tag in tags:
+    htag = tag.get('href')
+    #desc = tag.find_all('td')
+    hlinks.append({'endpoint': htag})
+
+# print the result
+pprint.pprint(hlinks)
