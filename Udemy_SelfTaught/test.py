@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import pprint
+import pprint as pp
 
 url = input("Enter a website to extract the URL's from: ")
 # Make a request
@@ -37,4 +37,4 @@ for tag in tags:
     hlinks.append({'endpoint': htag})
 
 # print the result
-pprint.pprint(hlinks)
+pp.pprint(hlinks)
